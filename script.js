@@ -50,7 +50,7 @@ nameInput.addEventListener("input", () => {
   drawCertificate();
 });
 
-downloadBtn.addEventListener("click", () => {
+downloadBtn.addEventListener("click", async () => {
 
   const name = nameInput.value.trim();
 
@@ -62,26 +62,54 @@ downloadBtn.addEventListener("click", () => {
 
   drawCertificate();
 
-  canvas.toBlob((blob) => {
+  canvas.toBlob(async (blob) => {
 
     if (!blob) {
       error.textContent = "Could not create certificate.";
       return;
     }
 
-    const imageURL = URL.createObjectURL(blob);
+    const safeName = name
+      .replace(/[<>:"/\\|?*\x00-\x1F]/g, "")
+      .trim()
+      .replace(/\s+/g, "_")
+      .slice(0, 60) || "certificate";
 
-    const newTab = window.open(imageURL, "_blank");
+    const file = new File(
+      [blob],
+      `${safeName}_certificate.png`,
+      { type: "image/png" }
+    );
 
-    if (!newTab) {
-      window.location.href = imageURL;
+    if (
+      navigator.share &&
+      navigator.canShare &&
+      navigator.canShare({ files: [file] })
+    ) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: "Certificate"
+        });
+        return;
+      } catch (err) {
+        if (err.name === "AbortError") return;
+      }
     }
 
-  }, "image/png");
-});
+    const imageURL = URL.createObjectURL(blob);
 
-nameInput.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    downloadBtn.click();
-  }
+    const link = document.createElement("a");
+    link.href = imageURL;
+    link.download = `${safeName}_certificate.png`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    setTimeout(() => {
+      URL.revokeObjectURL(imageURL);
+    }, 1000);
+
+  }, "image/png");
 });
