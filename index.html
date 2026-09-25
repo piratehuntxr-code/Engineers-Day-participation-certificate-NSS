@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificate Download</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Certificate Download</h1>
+    <p class="subtitle">Enter your name to generate your certificate.</p>
+
+    <div class="card">
+      <label for="name">Full Name</label>
+      <input id="name" type="text" placeholder="Enter your name" maxlength="60"
+             autocomplete="name" autofocus>
+      <button id="downloadBtn">Download Certificate</button>
+      <p id="error" class="error" aria-live="polite"></p>
+    </div>
+
+    <div class="preview">
+      <h2>Preview</h2>
+      <canvas id="certificateCanvas"></canvas>
+    </div>
+
+    <p class="note">The certificate is generated in your browser. Your name is not uploaded anywhere.</p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
