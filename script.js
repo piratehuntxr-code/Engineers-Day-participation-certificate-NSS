@@ -19,33 +19,39 @@ function drawCertificate() {
   const name = nameInput.value.trim();
 
   if (name) {
-    // Position is aligned with the blank line in the supplied certificate.
-    const x = 896;
-    const y = 584;
 
-    // Scale font down automatically for long names.
-    let fontSize = 43;
-    if (name.length > 28) fontSize = 37;
-    if (name.length > 38) fontSize = 31;
-    if (name.length > 48) fontSize = 27;
+    // Name position on the horizontal line
+    const x = 1267;
+    const y = 826;
+
+    let fontSize = 52;
+
+    if (name.length > 28) fontSize = 46;
+    if (name.length > 38) fontSize = 40;
+    if (name.length > 48) fontSize = 35;
 
     ctx.save();
+
     ctx.font = `${fontSize}px Arial, Helvetica, sans-serif`;
     ctx.fillStyle = "#111111";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
+
     ctx.fillText(name, x, y);
+
     ctx.restore();
   }
 }
 
 certificate.onload = drawCertificate;
+
 nameInput.addEventListener("input", () => {
   error.textContent = "";
   drawCertificate();
 });
 
 downloadBtn.addEventListener("click", () => {
+
   const name = nameInput.value.trim();
 
   if (!name) {
@@ -63,11 +69,15 @@ downloadBtn.addEventListener("click", () => {
     .slice(0, 60) || "certificate";
 
   const link = document.createElement("a");
+
   link.download = `${safeName}_certificate.png`;
   link.href = canvas.toDataURL("image/png");
+
   link.click();
 });
 
 nameInput.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") downloadBtn.click();
+  if (event.key === "Enter") {
+    downloadBtn.click();
+  }
 });
