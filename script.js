@@ -20,9 +20,9 @@ function drawCertificate() {
 
   if (name) {
 
-    // Name position on the horizontal line
+    // Exact center of the horizontal line in the certificate
     const x = 1267;
-    const y = 826;
+    const y = 838;
 
     let fontSize = 52;
 
