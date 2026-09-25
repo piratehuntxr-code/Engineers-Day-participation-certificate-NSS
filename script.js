@@ -62,18 +62,22 @@ downloadBtn.addEventListener("click", () => {
 
   drawCertificate();
 
-  const safeName = name
-    .replace(/[<>:"/\\|?*\x00-\x1F]/g, "")
-    .trim()
-    .replace(/\s+/g, "_")
-    .slice(0, 60) || "certificate";
+  canvas.toBlob((blob) => {
 
-  const link = document.createElement("a");
+    if (!blob) {
+      error.textContent = "Could not create certificate.";
+      return;
+    }
 
-  link.download = `${safeName}_certificate.png`;
-  link.href = canvas.toDataURL("image/png");
+    const imageURL = URL.createObjectURL(blob);
 
-  link.click();
+    const newTab = window.open(imageURL, "_blank");
+
+    if (!newTab) {
+      window.location.href = imageURL;
+    }
+
+  }, "image/png");
 });
 
 nameInput.addEventListener("keydown", (event) => {
